@@ -1,6 +1,3 @@
-/node_modules
-/public/hot
-/public/storage
 /storage/*.key
 /storage/debugbar
 /vendor
@@ -16,3 +13,4 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.vercel

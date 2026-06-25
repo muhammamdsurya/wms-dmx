@@ -17,7 +17,7 @@ class GoodsTransactionCategoryTable extends DataTableComponent
 
     public function builder(): Builder
     {
-        return GoodsTransactionCategory::stockOpname();
+        return GoodsTransactionCategory::query();
     }
 
     public function configure(): void

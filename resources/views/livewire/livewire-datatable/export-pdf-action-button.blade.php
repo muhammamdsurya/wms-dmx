@@ -1,5 +1,5 @@
 
-<div class="flex justify-center">
+<div class="-z-10 flex justify-center">
     <div
         x-data="{
             open: false,

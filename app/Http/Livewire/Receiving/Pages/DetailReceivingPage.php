@@ -11,26 +11,37 @@ class DetailReceivingPage extends Component
     public $transactionId;
     public $transaction;
 
-    public function mount($id) {
+    public function mount($id)
+    {
         $this->transactionId = $id;
         $this->loadTransaction();
     }
 
-    public function loadTransaction() {
-        $this->transaction = GoodsTransaction::where('id', $this->transactionId)->first();
+    public function loadTransaction()
+    {
+        // Eager load category dan relasi lain yang diperlukan (seperti items)
+        $this->transaction = GoodsTransaction::with(['category', 'items.goods', 'supplier'])
+            ->where('id', $this->transactionId)
+            ->first();
+
+        // Jika transaksi tidak ditemukan, arahkan kembali
+        if (!$this->transaction) {
+            return redirect()->route('receiving.index');
+        }
     }
 
-    public function printPDF() {
+    public function printPDF()
+    {
         $pdfContent = PrintService::printReceivingDetail($this->transaction)->output();
         $filename = __('receiving') . '-' . gmdate("Ymd", $this->transaction->transaction_at) . '.pdf';
 
-        $this->dispatchBrowserEvent('toast',[
+        $this->dispatchBrowserEvent('toast', [
             'type' => 'success',
             'message' => __('PDF is ready')
         ]);
 
         return response()->streamDownload(
-            fn () => print($pdfContent),
+            fn() => print($pdfContent),
             $filename
         );
     }

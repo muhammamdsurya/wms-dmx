@@ -2,11 +2,11 @@
     <div class="mb-6">
         <div class="mb-3 flex items-center gap-4">
             <a href="{{ route('receiving.index') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-black">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
             </a>
-            <h3 class="text-2xl font-semibold">{{ __('Detail Receiving') }}</h3>
+            <h3 class="text-2xl text-black font-semibold">{{ __('Detail Receiving') }}</h3>
         </div>
     </div>
 
@@ -32,6 +32,12 @@
                             </dt>
                             <dd class="text-gray-900 col-span-2 mt-0">
                                 {{ format_date($transaction->transaction_at) ?? '-' }}
+                            </dd>
+                             <dt>
+                                {{ __('Transaction Category') }}
+                            </dt>
+                            <dd class="text-gray-900 col-span-2 mt-0">
+                                {{ $transaction->category->name ?? '-' }}
                             </dd>
                         </div>
                         <div class="my-4 grid grid-cols-3 gap-4">

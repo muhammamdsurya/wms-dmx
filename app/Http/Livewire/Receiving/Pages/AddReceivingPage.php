@@ -16,61 +16,77 @@ use Livewire\Component;
 class AddReceivingPage extends Component
 {
     public $supplierId;
+    public $transactionCategoryId;
     public $receiveAt = '';
     public $goodsItems = [];
     public $description = '';
 
     public $supplierOptions;
     public $goodsOptions;
+    public $transactionCategoryOptions;
     public $validationErrors;
 
     protected $rules = [
         'supplierId' => 'required',
+        'transactionCategoryId' => 'required',
         'receiveAt' => 'required',
         'description' => 'max:200',
         'goodsItems.*.goodsId' => 'required',
         'goodsItems.*.quantity' => 'required|numeric|min:1'
     ];
 
-    public function mount() {
+    public function mount()
+    {
         $this->loadGoodsOptions();
         $this->loadSuppliersOptions();
+        $this->loadGoodsTransactionsOptions();
         $this->addItem();
     }
 
-    public function loadSuppliersOptions() {
+    public function loadSuppliersOptions()
+    {
         $this->supplierOptions = Supplier::pluck('name', 'id')->toArray();
     }
 
-    public function loadGoodsOptions() {
+    public function loadGoodsOptions()
+    {
         $this->goodsOptions = Goods::all()
             ->pluck('code_name', 'id')
             ->toArray();
     }
 
-    public function addItem() {
+    public function loadGoodsTransactionsOptions()
+    {
+        $this->transactionCategoryOptions = GoodsTransactionCategory::receiving()->pluck('name', 'id')
+            ->toArray();;
+    }
+
+    public function addItem()
+    {
         $this->goodsItems[] = [
             "goodsId" => null,
             "quantity" => null,
         ];
     }
 
-    public function deleteItem($index) {
+    public function deleteItem($index)
+    {
         unset($this->goodsItems[$index]);
     }
 
-    public function submit() {
+    public function submit()
+    {
         $this->validate();
-        $categoryId = GoodsTransactionCategory::receiving()->pluck('id')->first();
+
         $transaction = GoodsTransaction::create([
-            'category_id' => $categoryId,
+            'category_id' => $this->transactionCategoryId,
             'supplier_id' => $this->supplierId,
             'transaction_at' => strtotime($this->receiveAt),
             'description' => $this->description
         ]);
 
         if ($transaction) {
-            foreach($this->goodsItems as $item) {
+            foreach ($this->goodsItems as $item) {
                 GoodsTransactionGoods::create([
                     'transaction_id' => $transaction->id,
                     'goods_id' => $item['goodsId'],
@@ -81,7 +97,7 @@ class AddReceivingPage extends Component
 
             event(new GoodsTransactionCreated($transaction));
 
-            $this->dispatchBrowserEvent('toast',[
+            $this->dispatchBrowserEvent('toast', [
                 'type' => 'success',
                 'message' => __('Receiving added')
             ]);
@@ -94,6 +110,7 @@ class AddReceivingPage extends Component
     {
         return [
             'supplierId' => __('supplier'),
+            'transactionCategoryId' => __('transactionCategory'),
             'receiveAt' => __('receive At'),
             'description' => __('description'),
             'goodsItems.*.goodsId' => __('goods'),

@@ -1,111 +1,60 @@
-<div>
-    <div>
-        <div class="mb-6">
-            <div class="mb-3 flex items-center gap-4">
-                <a href="{{ route('user.index') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                    </svg>
-                </a>
-                <h3 class="text-2xl font-semibold">{{ __('Add User') }}</h3>
-            </div>
+<div class="mx-auto py-1">
+    <div class="mb-8 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{{ route('user.index') }}" class="p-2 bg-white rounded-full shadow-sm border border-slate-200 hover:bg-slate-50 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </a>
+            <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight">{{ __('Add New User') }}</h3>
         </div>
     </div>
-    <div class="md:grid md:grid-cols-3 md:gap-6">
-        <div class="mt-5 md:col-span-2 md:mt-0">
-            <form wire:submit.prevent="submit">
-                <div class="shadow sm:overflow-hidden sm:rounded-md">
-                    <div class="space-y-4 bg-white px-4 py-5 sm:p-6">
-                        <div class="mb-2">
-                            <label for="company-website" class="block text-sm font-medium text-gray-700">
-                               {{ __('Name') }}
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                   wire:model.defer="name"
-                                   type="text"
-                                   class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                   placeholder="{{ __('Name') }}"
-                                >
-                            </div>
-                            @error('name')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-2">
-                            <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                {{ __('Email') }}
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                    wire:model.defer="email"
-                                    type="text"
-                                    class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    placeholder="{{ __('Email') }}"
-                                >
-                            </div>
-                            @error('email')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-2">
-                            <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                {{ __('Role') }}
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <x-select-search
-                                    :data="$roleOptions"
-                                    wire:model.defer="role"
-                                    placeholder="-- {{ __('Select Role') }} --"
-                                />
-                            </div>
-                            @error('role')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-2">
-                            <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                {{ __('Password') }}
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                    wire:model.defer="password"
-                                    type="password"
-                                    class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    placeholder="{{ __('Password') }}"
-                                >
-                            </div>
-                            @error('password')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-2">
-                            <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                {{ __('Confirm Password') }}
-                            </label>
-                            <div class="mt-1 flex rounded-md shadow-sm">
-                                <input
-                                    wire:model.defer="confirmPassword"
-                                    type="password"
-                                    class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    placeholder="{{ __('Confirm Password') }}"
-                                >
-                            </div>
-                            @error('confirmPassword')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
+
+    <form wire:submit.prevent="submit">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">{{ __('Name') }}</label>
+                        <input wire:model.defer="name" type="text" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="John Doe">
+                        @error('name') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
-                    <div class="bg-gray-50 px-4 py-4 flex justify-between sm:px-6 border-t">
-                        <a href="{{ route('user.index') }}" class="inline-flex justify-center rounded-md bg-white py-2 px-4 text-sm font-medium border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            {{ __('Cancel') }}
-                        </a>
-                        <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-slate-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            {{ __('Save') }}
-                        </button>
+
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">{{ __('Email Address') }}</label>
+                        <input wire:model.defer="email" type="email" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="john@example.com">
+                        @error('email') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">{{ __('Role') }}</label>
+                        <x-select-search :data="$roleOptions" wire:model.defer="role" placeholder="-- Select Role --" />
+                        @error('role') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">{{ __('Password') }}</label>
+                        <input wire:model.defer="password" type="password" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="••••••••">
+                        @error('password') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-semibold text-slate-600 mb-2">{{ __('Confirm Password') }}</label>
+                        <input wire:model.defer="confirmPassword" type="password" class="w-full rounded-xl border-slate-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="••••••••">
+                        @error('confirmPassword') <span class="text-xs text-red-500 mt-1 block">{{ $message }}</span> @enderror
                     </div>
                 </div>
-            </form>
+            </div>
+
+            <div class="bg-slate-50 px-6 py-4 flex justify-end gap-4 border-t border-slate-100">
+                <a href="{{ route('user.index') }}" class="px-6 py-2.5 text-slate-600 font-medium hover:text-slate-900 transition">
+                    {{ __('Cancel') }}
+                </a>
+                <button type="submit" class="px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl shadow-lg transition-all active:scale-95">
+                    {{ __('Create User') }}
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
 </div>

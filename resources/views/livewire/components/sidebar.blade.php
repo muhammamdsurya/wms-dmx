@@ -1,7 +1,7 @@
 <div class="w-64 min-h-screen bg-slate-800" >
     <!-- Logo -->
     <div class="w-full h-16 bg-slate-900 flex justify-between items-center pl-4 pr-2 sticky top-0 left-0">
-        <span class="font-semibold text-lg">{{ config('app.name') }}</span>
+        <span class="font-semibold text-lg"><span class="text-red-600">DMX</span>PALLET</span>
         <button
             x-show="!isAboveBreakpoint"
             type="button"
@@ -34,7 +34,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
             </svg>
-            <span>{{ __('Goods') }}</span>
+            <span>{{ __('Items') }}</span>
         </a>
         @endcan
         @can('goods-transaction.view')
@@ -113,7 +113,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
             </svg>
-            <span>{{ __('Goods Category') }}</span>
+            <span>{{ __('Items Category') }}</span>
         </a>
         @endcan
         @can('goods-transaction-category.view')

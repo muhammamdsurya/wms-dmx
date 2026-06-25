@@ -7,7 +7,7 @@ html {
 @tailwind utilities;
 
 input, select, textarea {
-    color: rgb(75 85 99)
+    color: rgb(0, 0, 0)
 }
 
 input::placeholder, textarea::placeholder {

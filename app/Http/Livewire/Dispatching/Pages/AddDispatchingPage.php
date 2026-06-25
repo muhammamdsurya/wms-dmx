@@ -19,63 +19,64 @@ use Livewire\Component;
 class AddDispatchingPage extends Component
 {
     public $shipperId;
+    public $transactionCategoryId;
     public $dispatchAt = '';
     public $goodsItems = [];
-    public $goodsInfo = [];
     public $description = '';
 
     public $shipperOptions;
     public $goodsOptions;
-    public array $validationErrors = [];
+    public $transactionCategoryOptions;
+    public $validationErrors;
 
     protected $rules = [
         'shipperId' => 'required',
+        'transactionCategoryId' => 'required',
         'dispatchAt' => 'required',
         'description' => 'max:200',
         'goodsItems.*.goodsId' => 'required',
         'goodsItems.*.quantity' => 'required|numeric|min:1'
     ];
 
-    public function mount() {
+    public function mount()
+    {
         $this->loadGoodsOptions();
         $this->loadShipperOptions();
+        $this->loadGoodsTransactionsOptions();
         $this->addItem();
     }
 
-    public function loadShipperOptions() {
+    public function loadShipperOptions()
+    {
         $this->shipperOptions = Shipper::pluck('name', 'id')->toArray();
     }
 
-    public function loadGoodsOptions() {
-        $goods = Goods::with('unit')->get();
-        foreach ($goods as $item) {
-            $this->goodsOptions[$item->id] = $item->codeName;
-            $this->goodsInfo[$item->id] = [
-                'stock' => $item->stock,
-                'unit' => $item->unit->symbol
-            ];
-        }
+    public function loadGoodsOptions()
+    {
+        $this->goodsOptions = Goods::all()
+            ->pluck('code_name', 'id')
+            ->toArray();
+    }
+    public function loadGoodsTransactionsOptions()
+    {
+        $this->transactionCategoryOptions = GoodsTransactionCategory::dispatching()->pluck('name', 'id')
+            ->toArray();
     }
 
-    public function submit() {
+    public function submit()
+    {
         $this->validate();
-        $this->withValidator(function (Validator $validator) {
-            $validator->after(function ($validator) {
-                $this->validateStock($validator);
-            });
-        })->validate(['goodsItems.*.goodsId' => 'required']);
 
-        $categoryId = GoodsTransactionCategory::dispatching()->pluck('id')->first();
         $transaction = GoodsTransaction::create([
-            'category_id' => $categoryId,
+            'category_id' => $this->transactionCategoryId,
             'shipper_id' => $this->shipperId,
             'transaction_at' => strtotime($this->dispatchAt),
             'description' => $this->description,
-            'created_by' => Auth::id()
+
         ]);
 
         if ($transaction) {
-            foreach($this->goodsItems as $item) {
+            foreach ($this->goodsItems as $item) {
                 GoodsTransactionGoods::create([
                     'transaction_id' => $transaction->id,
                     'goods_id' => $item['goodsId'],
@@ -90,7 +91,8 @@ class AddDispatchingPage extends Component
     }
 
 
-    public function validateStock($validator) {
+    public function validateStock($validator)
+    {
         $goodsIds = array_column($this->goodsItems, 'goodsId');
         $goodsStocks = Goods::whereIn('id', $goodsIds)->pluck('stock', 'id')->toArray();
 
@@ -101,7 +103,8 @@ class AddDispatchingPage extends Component
         }
     }
 
-    public function getValidationAttributes() {
+    public function getValidationAttributes()
+    {
         return [
             'shipperId' => __('shipper'),
             'goodsItems.*.goodsId' => __('goods'),
@@ -110,14 +113,16 @@ class AddDispatchingPage extends Component
         ];
     }
 
-    public function addItem() {
+    public function addItem()
+    {
         $this->goodsItems[] = [
             "goodsId" => null,
             "quantity" => null,
         ];
     }
 
-    public function deleteItem($index) {
+    public function deleteItem($index)
+    {
         unset($this->goodsItems[$index]);
     }
 

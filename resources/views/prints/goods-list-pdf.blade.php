@@ -8,7 +8,7 @@
 <body>
 <header>
     <div class="text-left">
-        <h5>{{ $companyName ?? '['. __('Company Name') .']' }}</h5>
+        <h5><span class="text-red-900">DMX</span>PALLET</h5>
         <h3>{{ __('Goods  List') }}</h3>
         <p>{{ $printedAt ??  '['. __('Print At') .']' }}</p>
     </div>

@@ -29,14 +29,9 @@ class GoodsTransactionCategory extends Model
         return $query->where('is_receiving', true);
     }
 
+
     public function scopeDispatching($query) {
         return $query->where('is_dispatching', true);
-    }
-
-    public function scopeStockOpname($query) {
-        return $query
-            ->where('is_dispatching', false)
-            ->where('is_receiving', false);
     }
 
     public function transactions() {

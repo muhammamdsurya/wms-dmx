@@ -40,7 +40,7 @@ class AddStockOpnamePage extends Component
     }
 
     public function loadCategoryOptions() {
-        $this->categoryOptions = GoodsTransactionCategory::stockOpname()
+        $this->categoryOptions = GoodsTransactionCategory::query()
             ->pluck('name', 'id')
             ->toArray();
     }

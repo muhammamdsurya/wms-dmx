@@ -1,6 +1,6 @@
 <div x-data="app()" x-init="[initDate(), getNoOfDays()]" x-cloak>
     <div class="container mx-auto">
-        <div class="w-64">
+        <div class="w-full">
             <div class="relative">
                 <input type="hidden" name="date" x-ref="date" :value="datepickerValue" />
                 <input

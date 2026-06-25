@@ -19,5 +19,10 @@ class UnitSeeder extends Seeder
             'name' => 'pieces',
             'symbol' => 'pcs',
         ]);
+
+        Unit::create([
+            'name' => 'pallet',
+            'symbol' => 'plt',
+        ]);
     }
 }

@@ -1,156 +1,77 @@
-<div>
-    <div class="mb-6">
-        <div class="mb-3 flex items-center gap-4">
-            <a href="{{ route('goods.index') }}">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+<div class="mx-auto py-1">
+    <div class="mb-8 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="{{ route('goods.index') }}" class="p-2 bg-white rounded-full shadow border border-gray-100 hover:bg-gray-50 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
             </a>
-            <h3 class="text-2xl font-semibold">{{ __('Add Goods') }}</h3>
+            <h3 class="text-3xl font-extrabold text-slate-800 tracking-tight">{{ __('Add New Items') }}</h3>
         </div>
     </div>
-    <div class="md:grid md:grid-cols-3 md:gap-6">
-        <div class="mt-5 md:col-span-2 md:mt-0">
-            <form wire:submit.prevent="submit" method="POST">
-                <div class="shadow sm:overflow-hidden sm:rounded-md">
-                    <div class="space-y-4 bg-white px-4 py-5 sm:p-6">
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                    {{ __('Code') }}
-                                </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input
-                                        wire:model.defer="code"
-                                        type="text"
-                                        class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        placeholder="{{ __('Code') }}"
-                                    >
-                                </div>
-                                @error('code')
-                                <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                    {{ __('Name') }}
-                                </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input
-                                        wire:model.defer="name"
-                                        type="text"
-                                        class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        placeholder="{{ __('Name') }}"
-                                    >
-                                </div>
-                                @error('name')
-                                <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                    {{ __('Unit') }}
-                                </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <select wire:model.defer="unitId" class="rounded-md border-gray-300 text-sm">
-                                        <option>-- {{ __('Select unit') }} --</option>
-                                        @foreach($unitOptions as $unit)
-                                            <option value="{{ $unit->id }}">{{ $unit->name }} ({{ $unit->symbol }})</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @error('unitId')
-                                <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                    {{ __('Categories') }}
-                                </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                   <x-select-search
-                                       wire:model.defer="categoryIds"
-                                       :data="$categoryOptions"
-                                       multiple="true"
-                                   />
-                                </div>
-                                @error('categoryIds')
-                                <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                    {{ __('Price') }}
-                                </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input
-                                        wire:model.defer="price"
-                                        type="number"
-                                        class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        placeholder="{{ __('Price') }}"
-                                    >
-                                </div>
-                                @error('price')
-                                <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-6">
-                            <div class="col-span-3 sm:col-span-2">
-                                <label for="company-website" class="block text-sm font-medium text-gray-700">
-                                    {{ __('Stock Limit') }}
-                                </label>
-                                <div class="mt-1 flex rounded-md shadow-sm">
-                                    <input
-                                        wire:model.defer="stockLimit"
-                                        type="number"
-                                        class="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                        placeholder="{{ __('Stock Limit') }}"
-                                    >
-                                </div>
-                                @error('stockLimit')
-                                <span class="text-sm text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div>
-                            <label for="about" class="block text-sm font-medium text-gray-700">
-                                {{ __('Description') }}
-                            </label>
-                            <div class="mt-1">
-                                <textarea
-                                    wire:model.defer="description"
-                                    name="about"
-                                    rows="3"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    placeholder="Goods description"
-                                ></textarea>
-                            </div>
-                            @error('description')
-                            <span class="text-sm text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <form wire:submit.prevent="submit" class="p-8">
+            <div class="space-y-8">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Code') }}</label>
+                        <input type="text" wire:model.defer="code" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="e.g. GD-001">
+                        @error('code') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
-                    <div class="bg-gray-50 px-4 py-4 flex justify-between sm:px-6 border-t">
-                        <a href="{{ route('goods.index') }}" class="inline-flex justify-center rounded-md bg-white py-2 px-4 text-sm font-medium border border-gray-300 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            {{ __('Cancel') }}
-                        </a>
-                        <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-slate-900 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                            {{ __('Save') }}
-                        </button>
+
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Name') }}</label>
+                        <input type="text" wire:model.defer="name" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="e.g. Wooden Pallet">
+                        @error('name') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Unit') }}</label>
+                        <select wire:model.defer="unitId" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                            <option>-- {{ __('Select unit') }} --</option>
+                            @foreach($unitOptions as $unit)
+                                <option value="{{ $unit->id }}">{{ $unit->name }} ({{ $unit->symbol }})</option>
+                            @endforeach
+                        </select>
+                        @error('unitId') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Price') }}</label>
+                        <input type="number" wire:model.defer="price" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="0.00">
+                        @error('price') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Stock Limit') }}</label>
+                        <input type="number" wire:model.defer="stockLimit" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="10">
+                        @error('stockLimit') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                      <div class="space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Categories') }}</label>
+                        <x-select-search wire:model.defer="categoryIds" :data="$categoryOptions" multiple="true" />
+                        @error('categoryIds') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 space-y-1">
+                        <label class="text-sm font-semibold text-slate-600">{{ __('Description') }}</label>
+                        <textarea wire:model.defer="description" rows="3" class="w-full rounded-xl border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition" placeholder="Add some details..."></textarea>
+                        @error('description') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="md:col-span-1">
-        </div>
+            </div>
+
+            <div class="mt-10 flex items-center justify-end gap-4 border-t pt-6">
+                <a href="{{ route('goods.index') }}" class="px-6 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 transition">
+                    {{ __('Cancel') }}
+                </a>
+                <button type="submit" class="px-8 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all transform active:scale-95">
+                    {{ __('Save Goods') }}
+                </button>
+            </div>
+        </form>
     </div>
 </div>

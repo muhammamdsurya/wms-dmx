@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
-use Termwind\Components\Raw;
 
 class GoodsTable extends DataTableComponent
 {
@@ -47,10 +45,11 @@ class GoodsTable extends DataTableComponent
 
     public function builder(): Builder
     {
+        // PERBAIKAN: Memastikan semua kolom tabel utama ikut terpilih dan eager loading relasi unit
         return Goods::query()
-            ->select(
-                DB::raw('(stock * price) as total_price')
-            );
+            ->with('unit')
+            ->select('wms_goods.*')
+            ->selectRaw('(stock * price) as total_price');
     }
 
     public function columns(): array
@@ -62,9 +61,32 @@ class GoodsTable extends DataTableComponent
             Column::make(__('Name'), 'name')
                 ->sortable()
                 ->searchable(),
+
+            // SINKRONISASI KONDISI DENGAN SCOPE MODEL GOODS
             Column::make(__('Stock'), 'stock')
-                ->format(fn($value, $row, $column) => number_format($value))
-                ->sortable(),
+                ->sortable()
+                ->format(function ($value, $row, $column) {
+                    // Paksakan menjadi integer murni untuk menghindari kesalahan perbandingan PHP
+                    $stock = (int) $value;
+                    $minStock = (int) $row->minimum_stock;
+
+                    $formattedValue = number_format($stock);
+
+                    // 1. KONDISI MERAH (Out of Stock): Jika stok saat ini di bawah atau pas sama dengan batas minimum
+                    if ($stock <= $minStock) {
+                        return '<span class="text-red-600 font-bold" style="color: #dc2626; font-weight: bold;">' . $formattedValue . '</span>';
+                    }
+
+                    // 2. KONDISI KUNING (Low Stock): Jika stok di antara min_stock dan 2x min_stock
+                    if ($stock > $minStock && $stock < ($minStock * 2)) {
+                        return '<span class="text-amber-500 font-bold" style="color: #ff8800; font-weight: bold;">' . $formattedValue . '</span>';
+                    }
+
+                    // 3. KONDISI HIJAU (Available Stock): Jika stok melimpah (>= 2x min_stock)
+                    return '<span class="text-green-600" style="color: #16a34a;">' . $formattedValue . '</span>';
+                })
+                ->html(),
+
             Column::make(__('Stock Limit'), 'minimum_stock')
                 ->format(fn($value, $row, $column) => number_format($value))
                 ->sortable(),
@@ -85,18 +107,20 @@ class GoodsTable extends DataTableComponent
         ];
     }
 
-    public function exportPDF() {
+    public function exportPDF()
+    {
         $goods = $this->getRows()->getCollection();
         $pdfContent = PrintService::printGoodsList($goods)->output();
         $filename = __('goods-list') . '-' . date("Ymd") . '.pdf';
 
         return response()->streamDownload(
-            fn () => print($pdfContent),
+            fn() => print($pdfContent),
             $filename
         );
     }
 
-    public function exportCSV() {
+    public function exportCSV()
+    {
         $goods = $this->getRows()->getCollection();
         $filename = __('goods-list') . '-' . date("Ymd") . '.csv';
 
@@ -106,11 +130,13 @@ class GoodsTable extends DataTableComponent
         );
     }
 
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         $this->emitTo('components.delete-confirm-modal', 'deleteConfirmation', 'goods.components.goods-table', $id);
     }
 
-    public function deleteConfirmed($itemId) {
+    public function deleteConfirmed($itemId)
+    {
         if ($itemId) {
             Goods::where('id', $itemId)->delete();
         }
